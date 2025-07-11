@@ -67,5 +67,8 @@ Nowadays, small and medium-sized enterprises (SMEs) often have financial burdens
 ## Contributors : 
 
 1.Kori Pallavi
+## Acknowledgement : 
+This project is originally developed by **Suraj Balaram Patil**
+Licensed under the[MIT License](./LICENSE)
 
 
