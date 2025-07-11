@@ -3,45 +3,43 @@
 pragma solidity ^0.8.0;
 
 contract Company {
-    uint256[] Products;
+    address public owner;
 
-    mapping(uint256 => bool) hashcodeToTrue;
+    struct Product {
+        uint256 id;
+        string name;
+        string category;
+        uint256 addedTime;
+    }
 
-    address owner;
+    mapping(address => Product[]) public ownerToProducts;
+
+    event ProductRegistered(address indexed owner, uint256 productId);
+    event CompanyInitialized(address indexed owner);
 
     constructor(address _owner) {
         owner = _owner;
+        emit CompanyInitialized(_owner);
     }
 
-    modifier onlyOwner() {
-        require(msg.sender == owner);
-        _;
-    }
-
-    function addProducts(address _ownerAddress, uint256[] memory _products)
-        public
-        returns (string memory)
-    {
-        require(_ownerAddress == owner);
-        uint256 i;
-
-        for (i; i < _products.length; i++) {
-            Products.push(_products[i]);
-            hashcodeToTrue[_products[i]] = true;
+    function addProducts(
+        address _owner,
+        uint256[] memory _productIds
+    ) public returns (string memory) {
+        for (uint i = 0; i < _productIds.length; i++) {
+            ownerToProducts[_owner].push(Product({
+                id: _productIds[i],
+                name: "Generic",  // You can allow this as input later
+                category: "Default",
+                addedTime: block.timestamp
+            }));
+            emit ProductRegistered(_owner, _productIds[i]);
         }
 
-        return "Products added";
+        return "Products added successfully";
     }
 
-    function verifyProduct(uint256 _hashcode)
-        public
-        view
-        returns (string memory)
-    {
-        if (hashcodeToTrue[_hashcode]) {
-            return "Authenticated";
-        } else {
-            return "Counterfeit";
-        }
+    function getProductsByOwner(address _owner) public view returns (Product[] memory) {
+        return ownerToProducts[_owner];
     }
 }
